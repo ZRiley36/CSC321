@@ -18,7 +18,7 @@ def encrypt(
     cipher = AES.new(key, AES.MODE_ECB)
     next_block = f.read(BLOCK_SIZE)
     result_block = bytes(list(iv))
-    result = bytes(list(iv))
+    result = bytes()
     while next_block:
         if len(next_block) != BLOCK_SIZE:
             # padding
@@ -32,7 +32,6 @@ def encrypt(
         next_block = f.read(BLOCK_SIZE)
     f.close()
     return result
-
 
 
 def urlEncode(data):
