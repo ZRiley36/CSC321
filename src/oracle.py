@@ -21,13 +21,18 @@ def submit(key, iv, data):
     return cbc.encrypt(filename, key, iv) 
 # padding happens in cbc encrypt
 # need to refactor csc encrypt so it can return the cipher text
+# still havent flipped bits of cipher text to include substring ";admin=true;"
     
     
     
 def verify(key, iv, ciphertext):
+    substring = ";admin=true;"
     cipher = AES.new(key, AES.MODE_EBC, iv)
     plaintext  = cipher.decrypt(ciphertext)
-    cipher.verify()
+    if substring in plaintext:
+        return cipher.verify()
+    return False
+   
 
 def main():
     key = Random.get_random_bytes(16)
