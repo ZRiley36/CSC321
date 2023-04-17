@@ -10,7 +10,11 @@ BLOCK_SIZE = 16
 
 
 def byteflip(ciphertext):
-    ciphertext[2] = chr(ord(ciphertext[2]) ^ ord('%=3b') ^ ord ('='))
+    #second block. 5th and eleventh offset 
+    #ciphertext[14] = ciphertext[14] ^ ord('d') ^ ord('d')
+    #input string ladminltrue
+    ciphertext[4] = ciphertext[4] ^ ord('l') ^ ord(';')
+    ciphertext[10] = ciphertext[10] ^ ord('l') ^ ord('=')
     return ciphertext
 
 def encrypt(
@@ -49,7 +53,6 @@ def submit(key, iv, data):
     appendstr = ";session-id-31337"
     data = urlEncode(data)
     concatstr = prepend+data+appendstr
-    byteflip(concatstr)
     f = open(filename, 'w')
     f.write(concatstr)
     f.close()
@@ -61,7 +64,7 @@ def submit(key, iv, data):
 def verify(key, iv, ciphertext):
     substring = ";admin=true;"
     cipher = AES.new(key, AES.MODE_CBC, iv=iv)
-    plaintext  = cipher.decrypt(ciphertext).decode("UTF-8")
+    plaintext  = cipher.decrypt(ciphertext)
     print(plaintext)
     if substring in str(plaintext):
         return True
@@ -73,6 +76,8 @@ def main():
     iv = Random.get_random_bytes(16)
     usrdata  = input('submit your message: ')
     ciphertext = submit(key, iv, usrdata)
+    ciphertext = bytearray(ciphertext)
+    ciphertext = byteflip(ciphertext)
     print(verify(key, iv, ciphertext))
 
 
