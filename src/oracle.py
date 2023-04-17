@@ -18,7 +18,7 @@ def encrypt(
     cipher = AES.new(key, AES.MODE_ECB)
     next_block = f.read(BLOCK_SIZE)
     result_block = bytes(list(iv))
-    result
+    result = bytes(list(iv))
     while next_block:
         if len(next_block) != BLOCK_SIZE:
             # padding
@@ -27,6 +27,7 @@ def encrypt(
                 next_block += bytes([n])
 
         result_block = cipher.encrypt(cbc.bxor(next_block, result_block))
+        print(str(result_block))
         result += result_block
         next_block = f.read(BLOCK_SIZE)
     f.close()
@@ -35,8 +36,8 @@ def encrypt(
 
 
 def urlEncode(data):
-    data = data.replace(';', '%3B')
-    data = data.replace('=', '%3D')
+    data = data.replace(';', '%3b')
+    data = data.replace('=', '%3d')
     return data
             
         
@@ -51,14 +52,15 @@ def submit(key, iv, data):
     f.close()
     return encrypt(filename, key, iv) 
 # padding happens in cbc encrypt
-# need to refactor csc encrypt so it can return the cipher text
-# still havent flipped bits of cipher text to include substring ";admin=true;"
+# need to refactor cbc encrypt so it can return the cipher text
+# still havent flipped bits of cipher text to verify substring ";admin=true;"
     
 def verify(key, iv, ciphertext):
     substring = ";admin=true;"
-    cipher = AES.new(key, AES.MODE_EAX, iv)
-    plaintext  = cipher.decrypt(ciphertext.c_str())
-    if substring in plaintext:
+    cipher = AES.new(key, AES.MODE_CBC, iv=iv)
+    plaintext  = cipher.decrypt(ciphertext)
+    print(plaintext)
+    if substring in str(plaintext):
         return cipher.verify()
     return False
    
@@ -68,7 +70,7 @@ def main():
     iv = Random.get_random_bytes(16)
     usrdata  = input('submit your message: ')
     ciphertext = submit(key, iv, usrdata)
-    verify(key, iv, ciphertext)
+    print(verify(key, iv, ciphertext))
 
 
 if __name__ == "__main__":
