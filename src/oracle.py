@@ -8,13 +8,17 @@ BMP_HEADER_LENGTH = 54
 # 128 bit/16 bytes
 BLOCK_SIZE = 16
 
+
+def byteflip(ciphertext):
+    ciphertext[2] = chr(ord(ciphertext[2]) ^ ord('%=3b') ^ ord ('='))
+    return ciphertext
+
 def encrypt(
         filename: str,
         key: ByteString,
         iv: ByteString
 ):
     f = open(filename, mode="rb")
-    header = f.read(BMP_HEADER_LENGTH)
     cipher = AES.new(key, AES.MODE_ECB)
     next_block = f.read(BLOCK_SIZE)
     result_block = bytes(list(iv))
@@ -27,7 +31,6 @@ def encrypt(
                 next_block += bytes([n])
 
         result_block = cipher.encrypt(cbc.bxor(next_block, result_block))
-        print(str(result_block))
         result += result_block
         next_block = f.read(BLOCK_SIZE)
     f.close()
@@ -46,6 +49,7 @@ def submit(key, iv, data):
     appendstr = ";session-id-31337"
     data = urlEncode(data)
     concatstr = prepend+data+appendstr
+    byteflip(concatstr)
     f = open(filename, 'w')
     f.write(concatstr)
     f.close()
@@ -57,10 +61,10 @@ def submit(key, iv, data):
 def verify(key, iv, ciphertext):
     substring = ";admin=true;"
     cipher = AES.new(key, AES.MODE_CBC, iv=iv)
-    plaintext  = cipher.decrypt(ciphertext)
+    plaintext  = cipher.decrypt(ciphertext).decode("UTF-8")
     print(plaintext)
     if substring in str(plaintext):
-        return cipher.verify()
+        return True
     return False
    
 
