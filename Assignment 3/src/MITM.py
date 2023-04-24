@@ -18,43 +18,41 @@ BIG_ALPHA = \
     "D662A4D18E73AFA32D779D5918D08BC8858F4DCEF97C2A24" \
     "855E6EEB22B3B2E5"
 
+
 def mitm_dh():
     iv = Random.get_random_bytes(16)
     alice = DHUser(q=int(BIG_Q, 16), alpha=int(BIG_ALPHA, 16), iv=iv)
-    bob = DHUser(q=int(BIG_Q, 16), alpha=int(BIG_ALPHA, 16), iv=iv)
-    mallory = DHUser(q=int(BIG_Q, 16), alpha=int(BIG_ALPHA, 16), iv=iv)
-    
-    
+    mallory = DHUser(q=alice.q, alpha=alice.alpha, iv=iv)
+    bob = DHUser(q=mallory.q, alpha=mallory.alpha, iv=iv)
+
     alice.compute_secret_key(mallory.public_key)
     bob.compute_secret_key(mallory.public_key)
-    
+
     mallory.compute_secret_key(alice.public_key)
     mallory.compute_secret_key_two(bob.public_key)
-
 
     print("Bob's: ", bob.secret_key)
     print("Alice's: ", alice.secret_key)
 
     alice_cypher_text = alice.encrypt_message("Hi Bob!", alice.secret_key)
-    alice_plain_text = mallory.decrypt_message (alice_cypher_text, mallory.secret_key)
-    #alice_plain_text = alice_plain_text.decode('utf-8')
+    alice_plain_text = mallory.decrypt_message(alice_cypher_text, mallory.secret_key)
+    # alice_plain_text = alice_plain_text.decode('utf-8')
     alice_plain_text = str(alice_plain_text.decode('utf-8'))
-    
+
     print("Mallory received: ", alice_plain_text)
-    mallory_cipher_text  = mallory.encrypt_message(alice_plain_text, mallory.secret_key_two)
-    
-    print("Bob recieved: ", bob.decrypt_message (mallory_cipher_text, bob.secret_key))
+    mallory_cipher_text = mallory.encrypt_message(alice_plain_text, mallory.secret_key_two)
+
+    print("Bob received: ", bob.decrypt_message(mallory_cipher_text, bob.secret_key))
 
     bob_cipher_text = bob.encrypt_message("Hi Alice!", bob.secret_key)
-    bob_plain_text = mallory.decrypt_message (bob_cipher_text, mallory.secret_key_two)
-    
+    bob_plain_text = mallory.decrypt_message(bob_cipher_text, mallory.secret_key_two)
+
     bob_plain_text = str(bob_plain_text.decode('utf-8'))
     print("Mallory received: ", bob_plain_text)
-    
+
     mallory_cipher_text = mallory.encrypt_message(bob_plain_text, mallory.secret_key)
     print("Alice received: ", alice.decrypt_message(mallory_cipher_text, alice.secret_key))
-    
-    
+
 
 if __name__ == "__main__":
     mitm_dh()

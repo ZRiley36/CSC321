@@ -21,8 +21,9 @@ BIG_ALPHA = \
 
 def simulate_dh():
     iv = Random.get_random_bytes(16)
+    # alice = DHUser(q=37, alpha=5, iv=iv)
     alice = DHUser(q=int(BIG_Q, 16), alpha=int(BIG_ALPHA, 16), iv=iv)
-    bob = DHUser(q=int(BIG_Q, 16), alpha=int(BIG_ALPHA, 16), iv=iv)
+    bob = DHUser(q=alice.q, alpha=alice.alpha, iv=alice.iv)
 
     alice.compute_secret_key(bob.public_key)
     bob.compute_secret_key(alice.public_key)
