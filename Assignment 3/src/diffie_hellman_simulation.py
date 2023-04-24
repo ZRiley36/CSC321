@@ -30,11 +30,11 @@ def simulate_dh():
     print("Bob's: ", bob.secret_key)
     print("Alice's: ", alice.secret_key)
 
-    alice_cypher_text = alice.encrypt_message("Hi Bob!")
-    print("Bob received: ", bob.decrypt_message(alice_cypher_text))
+    alice_cypher_text = alice.encrypt_message("Hi Bob!", alice.secret_key)
+    print("Bob received: ", bob.decrypt_message(alice_cypher_text, bob.secret_key))
 
-    bob_cypher_text = bob.encrypt_message("Hi Alice!")
-    print("Alice received: ", alice.decrypt_message(bob_cypher_text))
+    bob_cypher_text = bob.encrypt_message("Hi Alice!", bob.secret_key)
+    print("Alice received: ", alice.decrypt_message(bob_cypher_text, alice.secret_key))
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ from Crypto.Util import Padding
 class DHUser:
     def __init__(self, q, alpha, iv):
         self.secret_key = None
+        self.secret_key_two = None
         self.iv = iv
         self.q = q
         self.alpha = alpha
@@ -17,12 +18,17 @@ class DHUser:
         self.secret_key = SHA256.new(
             pow(other_public_key, self.private_key, self.q).to_bytes(length=128, byteorder="big")
         ).hexdigest()[0:16]
+        
+    def compute_secret_key_two(self, other_public_key):
+        self.secret_key_two = SHA256.new(
+            pow(other_public_key, self.private_key, self.q).to_bytes(length=128, byteorder="big")
+        ).hexdigest()[0:16]
 
-    def encrypt_message(self, message):
-        cbc = AES.new(bytes(self.secret_key, "utf-8"), AES.MODE_CBC, iv=self.iv)
+    def encrypt_message(self, message, key):
+        cbc = AES.new(bytes(key, "utf-8"), AES.MODE_CBC, iv=self.iv)
         padded = Padding.pad(bytes(message, "utf-8"), 16)
         return cbc.encrypt(padded)
 
-    def decrypt_message(self, cypher_text):
-        cbc = AES.new(bytes(self.secret_key, "utf-8"), AES.MODE_CBC, iv=self.iv)
+    def decrypt_message(self, cypher_text, key):
+        cbc = AES.new(bytes(key, "utf-8"), AES.MODE_CBC, iv=self.iv)
         return Padding.unpad(cbc.decrypt(cypher_text), 16)
