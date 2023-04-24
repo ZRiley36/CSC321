@@ -3,6 +3,7 @@ from Crypto.Random import random
 from Crypto.Hash import SHA256
 from Crypto.Util import Padding
 
+
 class DHUser:
     def __init__(self, q, alpha, iv):
         self.secret_key = None
@@ -14,7 +15,7 @@ class DHUser:
 
     def compute_secret_key(self, other_public_key):
         self.secret_key = SHA256.new(
-            pow(other_public_key, self.private_key, self.q).to_bytes(length=128)
+            pow(other_public_key, self.private_key, self.q).to_bytes(length=128, byteorder="big")
         ).hexdigest()[0:16]
 
     def encrypt_message(self, message):
