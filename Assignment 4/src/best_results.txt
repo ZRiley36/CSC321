@@ -1,0 +1,63 @@
+Name:  Bilbo
+Password: welcome
+Total time: 0.8530582348505656 minutes
+
+Name:  Gandalf
+Password: wizard
+Total time: 0.3597100734710693 minutes
+
+Name:  Thorin
+Password: diamond
+Total time: 0.49211874802907307 minutes
+
+Name:  Fili
+Password: desire
+Total time: 0.18021492958068847 minutes
+
+Name:  Kili
+Password: ossify
+Total time: 0.4408337831497192 minutes
+
+Name:  Balin
+Password: hangout
+Total time: 2.2135727604230246 minutes
+
+Name:  Dwalin
+Password: drossy
+Total time: 0.388094170888265 minutes
+
+Name:  Oin
+Password: ispaghul
+Total time: 4.495347781976064 minutes
+
+Name:  Gloin
+Password: oversave
+Total time: 9.696491992473602 minutes
+
+Name:  Dori
+Password: indoxylic
+Total time: 14.32383624712626 minutes
+
+Name:  Nori
+Password: swagsman
+Total time: 11.355698557694753 minutes
+
+Name:  Ori
+Password: airway
+Total time: 0.1226614236831665 minutes
+
+Name:  Bifur
+Password: corrosible
+Total time: 35.80570020278295 minutes
+
+Name:  Bofur
+Password: libellate
+Total time: 28.19210367600123 minutes
+
+Name:  Durin
+Password: purrone
+Total time: 22.096412952740987 minutes
+
+Total time: 131.01662290096283 minutes
+
+Process finished with exit code 0
